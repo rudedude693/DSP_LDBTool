@@ -1,3 +1,10 @@
+
+### v3.0.2
+- Updated for game version 0.10.33.26934
+
+<details>
+<summary>All changes</summary>
+
 ### v3.0.1
 - Uploaded correct assembly
 
@@ -5,8 +12,6 @@
 - Updated for game version 0.10.28.20771
 - Removed support for adding custom strings, because the game code changed in such way where it no longer makes sense for LDBTool to provide this functionality.
 
-<details>
-<summary>All changes</summary>
 
 ### v2.0.6
 - Fixed that CustomGridIndex, CustomLocalization.ENUS, CustomLocalization.FRFR, CustomLocalization.ZNCH config files were wiped every time the game was launched.

@@ -11,13 +11,13 @@
       "commandName": "Executable",
       "executablePath": "node",
       "commandLineArgs": ".\\release.js build LDBTool\\ LDBToolPlugin.cs",
-      "workingDirectory": "$(ProjectDir)"
+      "workingDirectory": "$(ProjectDir)\\..\\"
     },
     "Release": {
       "commandName": "Executable",
       "executablePath": "node",
       "commandLineArgs": ".\\release.js release LDBTool\\ LDBToolPlugin.cs",
-      "workingDirectory": "$(ProjectDir)"
+      "workingDirectory": "$(ProjectDir)\\..\\"
     }
   }
 }
