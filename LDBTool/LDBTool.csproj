@@ -10,9 +10,11 @@
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageOutputDir>$(MSBuildThisFileDirectory)/Nuget/</PackageOutputDir>
         <PackageLicenseExpression>GPL-3.0-only</PackageLicenseExpression>
+        <Configurations>Release</Configurations>
+        <Platforms>AnyCPU</Platforms>
     </PropertyGroup>
 
     <ItemGroup>
-        <None Include="./../Config/README.md" Pack="true" PackagePath="\"/>
+        <None Include="./../Config/README.md" Pack="true" PackagePath="\" />
     </ItemGroup>
 </Project>

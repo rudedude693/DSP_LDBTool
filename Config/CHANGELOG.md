@@ -1,3 +1,6 @@
+### v3.0.1
+- Uploaded correct assembly
+
 ### v3.0.0
 - Updated for game version 0.10.28.20771
 - Removed support for adding custom strings, because the game code changed in such way where it no longer makes sense for LDBTool to provide this functionality.
