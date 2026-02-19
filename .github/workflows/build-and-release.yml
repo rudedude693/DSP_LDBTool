@@ -54,7 +54,7 @@ jobs:
       run: nuget restore LDBTool.sln
     
     - name: Build solution
-      run: msbuild LDBTool.sln /p:Configuration=Release /p:OutputPath=../Staging/
+      run: msbuild LDBTool.sln /p:Configuration=Release /p:OutputPath=${{ github.workspace }}\Staging\
     
     - name: Build Thunderstore package
       run: node release.js build LDBTool LDBToolPlugin.cs
