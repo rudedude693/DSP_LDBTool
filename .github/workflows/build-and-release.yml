@@ -1,0 +1,85 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v3.0.2
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    permissions:
+      contents: write  # Required to create releases and upload assets
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+    
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    
+    - name: Install Node dependencies
+      run: npm install
+    
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+    
+    - name: Create DevEnv.targets for CI
+      run: |
+        New-Item -ItemType Directory -Force -Path C:\fakepath
+        @"
+        <?xml version="1.0" encoding="utf-8"?>
+        <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+          <PropertyGroup>
+            <SteamDir>C:\fakepath\</SteamDir>
+            <DSPGameDir>C:\fakepath\</DSPGameDir>
+          </PropertyGroup>
+        </Project>
+        "@ | Out-File -FilePath "DevEnv.targets" -Encoding UTF8
+      shell: pwsh
+    
+    - name: Restore NuGet packages
+      run: dotnet restore LDBTool.sln
+    
+    - name: Build solution
+      run: dotnet build LDBTool.sln --configuration Release --no-restore /p:OutputPath=../Staging/
+    
+    - name: Build Thunderstore package
+      run: node release.js build LDBTool LDBToolPlugin.cs
+    
+    - name: Get version from tag
+      id: get_version
+      run: |
+        $version = $env:GITHUB_REF -replace 'refs/tags/v',''
+        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+      shell: pwsh
+    
+    - name: Find built package
+      id: find_package
+      run: |
+        $package = Get-ChildItem -Path "Build" -Filter "*.zip" | Select-Object -First 1
+        echo "PACKAGE_PATH=$($package.FullName)" >> $env:GITHUB_OUTPUT
+        echo "PACKAGE_NAME=$($package.Name)" >> $env:GITHUB_OUTPUT
+      shell: pwsh
+    
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: ${{ steps.find_package.outputs.PACKAGE_PATH }}
+        body: |
+          Release ${{ steps.get_version.outputs.VERSION }}
+          
+          See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/Config/CHANGELOG.md) for details.
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
