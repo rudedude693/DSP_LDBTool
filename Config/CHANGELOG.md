@@ -1,4 +1,7 @@
 
+### v3.0.3
+- Maintenance release
+
 ### v3.0.2
 - Updated for game version 0.10.33.26934
 
