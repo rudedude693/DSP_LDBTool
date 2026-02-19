@@ -33,6 +33,9 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
     
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+    
     - name: Create DevEnv.targets for CI
       run: |
         New-Item -ItemType Directory -Force -Path C:\fakepath
@@ -48,10 +51,10 @@ jobs:
       shell: pwsh
     
     - name: Restore NuGet packages
-      run: dotnet restore LDBTool.sln
+      run: nuget restore LDBTool.sln
     
     - name: Build solution
-      run: dotnet build LDBTool.sln --configuration Release --no-restore /p:OutputPath=../Staging/
+      run: msbuild LDBTool.sln /p:Configuration=Release /p:OutputPath=../Staging/
     
     - name: Build Thunderstore package
       run: node release.js build LDBTool LDBToolPlugin.cs
