@@ -33,7 +33,7 @@ jobs:
     
     - name: Create DevEnv.targets for CI
       run: |
-        mkdir -p C:\fakepath
+        New-Item -ItemType Directory -Force -Path C:\fakepath
         @"
         <?xml version="1.0" encoding="utf-8"?>
         <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
@@ -56,8 +56,10 @@ jobs:
     
     - name: Get version from tag
       id: get_version
-      run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
-      shell: bash
+      run: |
+        $version = $env:GITHUB_REF -replace 'refs/tags/v',''
+        echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+      shell: pwsh
     
     - name: Find built package
       id: find_package
